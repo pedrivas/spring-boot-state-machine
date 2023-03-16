@@ -4,6 +4,7 @@ import com.drivas.springstatemachine.model.Events;
 import com.drivas.springstatemachine.model.States;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
@@ -31,7 +32,11 @@ public class SimpleStateMachineConfiguration extends StateMachineConfigurerAdapt
         states.withStates()
                 .initial(States.CREATED)
                 .end(States.SETTLED)
-                .states(EnumSet.allOf(States.class));
+                .state(States.CREATED)
+                .state(States.PENDING_APPROVAL,checkAuthentication(),null)
+                .state(States.APPROVED)
+                .state(States.CANCELED)
+                .state(States.SETTLED);
     }
 
     @Override
@@ -54,6 +59,11 @@ public class SimpleStateMachineConfiguration extends StateMachineConfigurerAdapt
                 System.out.println("State changed from " + from.getId() + " to " + to.getId());
             }
         };
+    }
+
+    @Bean
+    public Action<States,Events> checkAuthentication() {
+        return stateContext -> System.out.println("Checando autenticacao " +  stateContext.getTarget().getId());
     }
 
 }

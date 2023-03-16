@@ -5,27 +5,19 @@ import com.drivas.springstatemachine.model.States;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.statemachine.StateMachine;
 
 @SpringBootApplication
-public class SpringStateMachineApplication implements CommandLineRunner {
-
-	@Autowired
-	private StateMachine<States, Events> stateMachine;
-
+//@ComponentScan(basePackages = "com.drivas.springstatemachine.controller")
+//@EnableAutoConfiguration(exclude= RabbitAutoConfiguration.class)
+public class SpringStateMachineApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringStateMachineApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		System.out.println("Iniciando máquina de estados...");
-		stateMachine.sendEvent(Events.BEGIN_TRANSACTION);
-		stateMachine.sendEvent(Events.APPROVE);
-		stateMachine.sendEvent(Events.SETTLE);
-		System.out.println("Máquina de estados finalizada");
-
-	}
 }
